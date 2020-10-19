@@ -18,7 +18,7 @@ minimum_rank = 1.0
 
 lineup_pathname = os.getcwd() + os.sep + lineup_filename
 print("reading from " + lineup_pathname)
-output_pathname = os.getcwd() + os.sep + output_filename + 'txt'
+output_pathname = os.getcwd() + os.sep + output_filename + '.txt'
 print("writing to " + output_pathname)
 newFile = open(output_pathname, 'w')
 newFile.write('\n' + lineup_filename + "\n" + output_filename+ "\n" + note1 + '\n')
@@ -58,7 +58,7 @@ for lineup in optimizer.optimize(n=number_of_lineups):
 
 newFile.close()
 
-# output_pathname = os.getcwd() + os.sep + output_filename + 'csv'
+# output_pathname = os.getcwd() + os.sep + output_filename + '.csv'
 # print("writing csv to " + output_pathname)
 # exporter = CSVLineupExporter(optimizer.optimize(n=number_of_lineups))
 # exporter.export(output_pathname)
