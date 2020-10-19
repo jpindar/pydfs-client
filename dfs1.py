@@ -16,6 +16,21 @@ number_of_lineups = 10
 note1 = ""
 minimum_rank = 1.0
 
+
+def addPlayer(thisPlayer, thisNote):
+    newFile.write(' adding ' + thisPlayer + ' ' + thisNote + '\n')
+    optimizer.add_player_to_lineup(optimizer.get_player_by_name(thisPlayer))
+
+def removePlayer(thisPlayer, thisNote):
+    newFile.write(' removing ' + thisPlayer + ' ' + thisNote + '\n')
+    optimizer.remove_player(optimizer.get_player_by_name(thisPlayer))
+
+def removeTeam(thisTeam, thisNote):
+    newFile.write(' removing ' + thisTeam + ' ' + thisNote + '\n')
+    badTeam = filter(lambda p: p.team == thisTeam, optimizer.players)
+    for player in badTeam:
+        optimizer.remove_player(player)
+
 lineup_pathname = os.getcwd() + os.sep + lineup_filename
 print("reading from " + lineup_pathname)
 output_pathname = os.getcwd() + os.sep + output_filename + '.txt'
@@ -36,26 +51,16 @@ for player in optimizer.players:
             optimizer.remove_player(player)
 
 
-teamName = 'DET'
-thisTeam = filter(lambda p: p.team == teamName, optimizer.players)
-for player in thisTeam:
-    optimizer.remove_player(player)
+print('optimizing...')
+lineups = optimizer.optimize(n=number_of_lineups)
+print('got lineups')
 
-
-playerName = 'Devonta Freeman'
-player = optimizer.get_player_by_name(playerName)
-optimizer.remove_player(player)
-
-
-playerName = 'Tarik Cohen'
-player = optimizer.get_player_by_name(playerName)
-optimizer.add_player_to_lineup(player)
-  
-for lineup in optimizer.optimize(n=number_of_lineups):
+for lineup in lineups:
     newFile.write("\n***********\n")
     # print(lineup)
     newFile.write(str(lineup))
 
+optimizer.print_statistic()
 newFile.close()
 
 # output_pathname = os.getcwd() + os.sep + output_filename + '.csv'
