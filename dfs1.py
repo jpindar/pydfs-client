@@ -2,7 +2,7 @@
 
 """
 dfs1.py
-first test of pydfs
+This uses pydfs to create lineups
 """
 
 import os
@@ -10,20 +10,23 @@ from pydfs_lineup_optimizer import get_optimizer, Site, Sport, CSVLineupExporter
 
 
 lineup_filename = "FanDuel-NFL-2019-11-28-40929-players-list.csv"
-output_filename = "lineups1.txt"
-csv_filename = "results1.csv"
+output_filename = "lineups1"
 number_of_lineups = 10
+note1 = ""
 minimum_rank = 1.0
 
-filename = os.getcwd() + os.sep + output_filename   # could use "\\"
-print("writing to " + output_filename)
-newFile = open(output_filename, 'w')
-
+lineup_pathname = os.getcwd() + os.sep + lineup_filename
+print("reading from " + lineup_pathname)
+output_pathname = os.getcwd() + os.sep + output_filename + 'txt'
+print("writing to " + output_pathname)
+newFile = open(output_pathname, 'w')
+newFile.write('\n' + lineup_filename + "\n" + output_filename+ "\n" + note1 + '\n')
+print('calling optimizer')
 optimizer = get_optimizer(Site.FANDUEL, Sport.FOOTBALL)
-optimizer.load_players_from_csv(lineup_filename)
+print('loading players')
+optimizer.load_players_from_csv(lineup_pathname)
+print('optimizing...')
 
-# player = optimizer.get_player_by_name('Matthew Stafford')
-# optimizer.remove_player(player)
 teamName = 'DET'
 thisTeam = filter(lambda p: p.team == teamName, optimizer.players)
 for player in thisTeam:
@@ -52,7 +55,8 @@ for lineup in optimizer.optimize(n=number_of_lineups):
 
 newFile.close()
 
-
+# output_pathname = os.getcwd() + os.sep + output_filename + 'csv'
+# print("writing csv to " + output_pathname)
 # exporter = CSVLineupExporter(optimizer.optimize(n=number_of_lineups))
-# exporter.export(csv_filename)
+# exporter.export(output_pathname)
 
