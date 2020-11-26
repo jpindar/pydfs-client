@@ -3,23 +3,28 @@
 """
 dfs1.py
 This uses pydfs to create lineups
+
+Note that teams are referenced in the roster file by their 2 or 3 capital letter abbreviation,
+so pyDFS doesn't know the team names except as the name of their defense.
 """
 
 import os
 from pydfs_lineup_optimizer import get_optimizer, Site, Sport, CSVLineupExporter
 
-# lineup_filename = "FanDuel-NFL-2020-10-18-50949-players-list-friends.csv"
-lineup_filename = "FanDuel-NFL-2020-10-18-50946-players-list-special.csv"
+lineup_filename = "FanDuel-NFL-2020-11-26-51889-players-list-Tday-friends.csv"
 
-output_filename = "lineups1"
+output_filename = "lineups3"
 number_of_lineups = 10
 note1 = ""
-minimum_rank = 1.0
+minimum_rank = 6.0
 playersToAdd = [['','']]
 playersToRemove = [['','']]
+teamsToRemove = [['','']]
 
-playersToAdd.append(['Lamar Jackson','per dfn'])
-playersToRemove.append(['Lee Smith','per dfn'])
+
+teamsToRemove.append(['PIT', 'game postponed by covid'])
+teamsToRemove.append(['BAL', 'game postponed by covid'])
+playersToAdd.append(['Deshaun Watson','good dfn stats'])
 
 
 def addPlayer(thisPlayer, thisNote):
@@ -43,10 +48,13 @@ def removePlayer(thisPlayer, thisNote):
     optimizer.remove_player(player)
 
 def removeTeam(thisTeam, thisNote):
-    newFile.write(' removing ' + thisTeam + ' ' + thisNote + '\n')
+    if thisTeam == '':
+        return
+    newFile.write('removing ' + thisTeam + ' (' + thisNote + ')\n')
     badTeam = filter(lambda p: p.team == thisTeam, optimizer.players)
     for player in badTeam:
         optimizer.remove_player(player)
+
 
 lineup_pathname = os.getcwd() + os.sep + lineup_filename
 print("reading from " + lineup_pathname)
@@ -73,6 +81,8 @@ for player in playersToAdd:
 for player in playersToRemove:
    removePlayer(player[0],player[1])
 
+for bad_team in teamsToRemove:
+   removeTeam(bad_team[0],bad_team[1])
 
 print('optimizing...')
 lineups = optimizer.optimize(n=number_of_lineups)
