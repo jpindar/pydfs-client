@@ -15,15 +15,32 @@ output_filename = "lineups1"
 number_of_lineups = 10
 note1 = ""
 minimum_rank = 1.0
+playersToAdd = [['','']]
+playersToRemove = [['','']]
+
+playersToAdd.append(['Lamar Jackson','per dfn'])
+playersToRemove.append(['Lee Smith','per dfn'])
 
 
 def addPlayer(thisPlayer, thisNote):
-    newFile.write(' adding ' + thisPlayer + ' ' + thisNote + '\n')
-    optimizer.add_player_to_lineup(optimizer.get_player_by_name(thisPlayer))
+    if thisPlayer == '':
+        return
+    player = optimizer.get_player_by_name(thisPlayer)
+    if player is None:
+       print('ERROR - there is no such player as ' + thisPlayer)
+       return
+    newFile.write('adding ' + thisPlayer + ' (' + thisNote + ')\n')
+    optimizer.add_player_to_lineup(player)
 
 def removePlayer(thisPlayer, thisNote):
-    newFile.write(' removing ' + thisPlayer + ' ' + thisNote + '\n')
-    optimizer.remove_player(optimizer.get_player_by_name(thisPlayer))
+    if thisPlayer == '':
+        return
+    player = optimizer.get_player_by_name(thisPlayer)
+    if player is None:
+       print('ERROR - there is no such player as ' + thisPlayer)
+       return
+    newFile.write('removing ' + thisPlayer + ' (' + thisNote + ')\n')
+    optimizer.remove_player(player)
 
 def removeTeam(thisTeam, thisNote):
     newFile.write(' removing ' + thisTeam + ' ' + thisNote + '\n')
@@ -49,6 +66,12 @@ for player in optimizer.players:
     if player.fppg < minimum_rank:
         if player.positions[0] != 'D':
             optimizer.remove_player(player)
+
+for player in playersToAdd:
+   addPlayer(player[0],player[1])
+
+for player in playersToRemove:
+   removePlayer(player[0],player[1])
 
 
 print('optimizing...')
